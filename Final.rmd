@@ -236,10 +236,67 @@ The data above shows that the COVID-19 vaccine is effective for LGBTQ individual
 
 ## Druggies
 
+### Graphical Results
 
 
+```{r}
+dd2 <- druguser %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
 
 
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
+
+The graph shows that drug users who took the vaccine were actually more likely to get COVID-19 than those who took the placebo. Over 75% of vaccinated drug users got sick, while less than 25% of those on the placebo did. This suggests the vaccine was ineffective for this group.
+    
+
+### Numerical
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=druguser)
+rowPerc(table1)
+colPerc(table1)
+```
+
+The data shows that drug users who took the placebo had only an 8.3% chance of getting COVID-19, while 91.7% of vaccinated drug users got infected. Among those who didn’t get sick, 51% had taken the placebo and 49% the vaccine. The infection ratio of placebo to vaccinated drug users was 0:3, meaning vaccinated drug users were much more likely to get COVID-19. Based on this data, it is strongly advised that drug users avoid taking the vaccine.
+
+
+### Inferential
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+druguserfisher <- fisher.test(table1)
+druguserfisher
+```
+
+Three tests were performed to identify if dying from covid19 is independent of an individuals drug usage. The p-value for the first test 1e-10, for the second test the p-value is 0 and for the third test the p-value is 3e-12. This indicates the statistical probability of dying from covid19 being related to drug usage of the individual. The p-value of 1e-10 is very small indicating the probability's vaccine effectiveness in drug using individuals. The odds ratio of 0.087 represents how much more likely drug users that took a placebo vs the vaccine were to get the Covid19 virus.
+
+### Confidence Interval
+
+```{r}
+effect <- druguserfisher$p.value/(druguserfisher$p.value +1)
+effectivenessdruguser = druguserfisher$estimate/(druguserfisher$estimate +1)*100
+print(effectivenessdruguser)
+```
+
+```{r}
+low=(druguserfisher$conf.int[1]/(druguserfisher$conf.int[1] +1))*100
+hi=(druguserfisher$conf.int[2]/(druguserfisher$conf.int[2] +1))*100
+options(digits=2)
+```
+
+The data above shows that the COVID-19 vaccine is ineffective for drug users, as its effectiveness falls below 50%. Based on the confidence interval provided, we can conclude that the vaccine does not significantly reduce the risk of COVID-19 infection in this group.
+
+
+The odds ratio, which reflects vaccine effectiveness, is about 8 for drug users. However, the confidence interval from 2.65 to 17.86 suggests a wide range, indicating uncertainty and that the vaccine is likely ineffective for this group.
 
 
 
