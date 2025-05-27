@@ -26,7 +26,7 @@ druguser = filter(FinalData, DrugUser =="yes")
 
 # Introduction
 
-A new preventative vaccine (covid921) is under test in clinical trials. Given the nature of this vaccine it is suspected that the drug may exhibit different effectiveness across the variety of subpopulations tracked. Consider population subgroups by gender( guys and gals), drug use, and sexual orientation. Write a complete report that separately considers this drug for each subgroup and your recommendations as to whether people in the subgroup should take the vaccine. Structure your report in four sections each devoted to one of the four subgroups, use null and alternative hypothesis statements and correct statistical verbage when referencing p-values in conclusions.
+A new preventative vaccine (covid19) is under test in clinical trials. Given the nature of this vaccine it is suspected that the drug may exhibit different effectiveness across the variety of subpopulations tracked. Consider population subgroups by gender( guys and gals), drug use, and sexual orientation. Write a complete report that separately considers this drug for each subgroup and your recommendations as to whether people in the subgroup should take the vaccine. Structure your report in four sections each devoted to one of the four subgroups, use null and alternative hypothesis statements and correct statistical verbage when referencing p-values in conclusions.
 
 ## Males
 
@@ -301,3 +301,10 @@ The odds ratio, which reflects vaccine effectiveness, is about 8 for drug users.
 
 
 # Overall Results and Conclusions
+
+We examined COVID-19 vaccine effectiveness in four groups: males, females, LGBTQ individuals, and drug users, and tested whether effectiveness was independent of sex, sexual orientation, or drug use. Using graphical and numerical data, plus Pearson Chi-Squared tests and confidence intervals, we assessed infection rates and vaccine impact. The vaccine was over 50% effective for males and females—though females were slightly more likely to get sick than males—and highly recommended for both. For LGBTQ individuals, effectiveness was about 80%, showing vaccine performance is independent of sexual orientation. However, for drug users, effectiveness was only 8%, indicating the vaccine is ineffective and drug use affects vaccine success.
+
+In summary, the vaccine works well for males, females, and LGBTQ groups but is not effective for drug users.
+
+
+
