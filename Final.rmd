@@ -1,6 +1,6 @@
 ---
-title: "Covid91 vaccine study Final2024"
-author: "Put your name here!"
+title: "Covid19 vaccine study Final 2025"
+author: "Anicia Friend"
 output: 
   html_document:
     number_sections: true
@@ -18,16 +18,82 @@ FinalDat <-read.csv(file="finalSumr2024.csv",header=TRUE)
 FinalData <- FinalDat  %>% select(-one_of("X"))
 FinalData <- FinalData %>%
 mutate(across(where(is.character), as.factor))
+male = filter(FinalData, sex =="M")
+female = filter (FinalData, sex =="F")
+lgbtq = filter(FinalData, LGBTQ =="gay")
+druguser = filter(FinalData, DrugUser =="yes")
 ```
 
 # Introduction
 
-A new  preventative vaccine (covid921) is under test in clinical trials. Given the nature of this vaccine it is suspected that the drug may exhibit different effectiveness across the variety of subpopulations tracked. Consider population subgroups by gender( guys and gals), drug use, and sexual orientation. Write a complete report that separately considers this drug for each subgroup and your recommendations as to whether people in the subgroup should take the vaccine. Structure your report in four sections each devoted to one of the four subgroups, use null and alternative hypothesis statements and correct statistical verbage when referencing p-values in conclusions.
+A new preventative vaccine (covid921) is under test in clinical trials. Given the nature of this vaccine it is suspected that the drug may exhibit different effectiveness across the variety of subpopulations tracked. Consider population subgroups by gender( guys and gals), drug use, and sexual orientation. Write a complete report that separately considers this drug for each subgroup and your recommendations as to whether people in the subgroup should take the vaccine. Structure your report in four sections each devoted to one of the four subgroups, use null and alternative hypothesis statements and correct statistical verbage when referencing p-values in conclusions.
 
 ## Males
 
+```{r}
+dd2 <- male %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
+
+The graph shows that vaccinated males were much less likely to get COVID-19 than those who took the placebo. Fewer than 30% of vaccinated males got sick, compared to over 60% of those who received the placebo.
+
+### Numerical
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=male)
+rowPerc(table1)
+colPerc(table1)
+```
+
+The numbers show that males who took the placebo were significantly more likely to get COVID-19 73.80% compared to just 26.20% of vaccinated males. Among those who didn’t get sick, the split was nearly even: 50.01% had taken the placebo and 49.99% the vaccine. The likelihood of getting COVID-19 for placebo vs. vaccinated males was also shown as a 3:1 ratio, reinforcing that placebo recipients were much more at risk.
+
+
+Based on this data, it’s recommended that males get the COVID-19 vaccine, as it significantly lowers the risk of infection.
+
+
+### Inferential
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+malefisher <- fisher.test(table1)
+malefisher
+```
+
+Three tests were conducted to determine if death from COVID-19 is independent of a person’s sex. All tests produced extremely small p-values (2.2e-16, 0, and 2.2e-16), suggesting a strong statistical link between sex and COVID-19 mortality. The low p-values also support the vaccine's effectiveness in males. Additionally, the odds ratio shows how much more likely unvaccinated males (placebo group) were to get COVID-19 compared to vaccinated males.
+
+
+### Confidence Interval
+
+```{r}
+effect <- malefisher$p.value/(malefisher$p.value +1)
+effectivenessmale = malefisher$estimate/(malefisher$estimate +1)*100
+print(effectivenessmale)
+```
+
+```{r}
+low=(malefisher$conf.int[1]/(malefisher$conf.int[1] +1))*100
+hi=(malefisher$conf.int[2]/(malefisher$conf.int[2] +1))*100
+options(digits=2)
+```
+
+
+The data above shows the COVID-19 vaccine is effective for males, as its effectiveness is above 50%. The confidence interval ranges from 68.85% to 78.32%, confirming its reliability. The odds ratio of 73.8 further supports how much more likely unvaccinated males were to get infected compared to those who were vaccinated.
+
 
 ## Females
+
+
 
 
 ## LGBTQ
