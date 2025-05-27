@@ -168,11 +168,79 @@ The odds ratio, which reflects the vaccine’s effectiveness, is about 65 for fe
 
 ## LGBTQ
 
+### Graphical Results
 
+```{r}
+dd2 <- lgbtq %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
+
+The graph shows that LGBTQ individuals who took the vaccine were much less likely to get COVID-19 compared to those who took the placebo. About 20% of vaccinated LGBTQ individuals got sick, while nearly 80% of those in the placebo group did. This suggests the vaccine is highly effective for this group.
+
+
+### Numerical Results
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=lgbtq)
+rowPerc(table1)
+colPerc(table1)
+```
+
+The data shows that LGBTQ individuals who took the placebo were 80% more likely to get COVID-19, compared to 20% of those who were vaccinated. Among those who didn’t get sick, 48% had taken the placebo and 52% the vaccine. The infection ratio between placebo and vaccinated LGBTQ individuals was roughly 3:1, meaning those who took the placebo were much more likely to contract COVID-19 than those vaccinated.
+
+
+This data clearly supports recommending the COVID-19 vaccine for LGBTQ individuals, as it significantly lowers their risk of infection.
+
+
+### Inferential Results
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+lgbtqfisher <- fisher.test(table1)
+lgbtqfisher
+```
+
+
+Three tests were conducted to determine if COVID-19 death is independent of sexual orientation. The p-values 2e-06, 0, and 7e-07 are all extremely low, indicating a strong statistical link between sexual orientation and COVID-19 mortality. The very small p-values also suggest the vaccine’s effectiveness in LGBTQ individuals. The odds ratio of 4.3 shows that LGBTQ individuals who took the placebo were over four times more likely to get COVID-19 compared to those vaccinated.
+
+
+
+### Confidence Interval
+
+```{r}
+effect <- lgbtqfisher$p.value/(lgbtqfisher$p.value +1)
+effectivenesslgbtq = lgbtqfisher$estimate/(lgbtqfisher$estimate +1)*100
+print(effectivenesslgbtq)
+```
+
+```{r}
+low=(lgbtqfisher$conf.int[1]/(lgbtqfisher$conf.int[1] +1))*100
+hi=(lgbtqfisher$conf.int[2]/(lgbtqfisher$conf.int[2] +1))*100
+options(digits=2)
+```
+
+The data above shows that the COVID-19 vaccine is effective for LGBTQ individuals, with effectiveness well above 50%. Based on the confidence interval of 69% to 90%, we can confidently conclude the vaccine significantly reduces their risk of getting COVID-19. The odds ratio of 81 further highlights how much more likely unvaccinated LGBTQ individuals were to contract the virus compared to those vaccinated.
 
 
 
 ## Druggies
+
+
+
+
+
+
 
 
 # Overall Results and Conclusions
