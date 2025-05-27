@@ -95,8 +95,80 @@ The data above shows the COVID-19 vaccine is effective for males, as its effecti
 
 
 
+### Graphical Results
+
+```{r}
+dd2 <- female %>% group_by(infected,treatment) %>% summarize(count=n()) %>% mutate(prcnt=count/sum(count))
+
+
+# the group_by followed by summarize(count=n())
+
+basicC <- ggplot(dd2,aes(x=infected,y=count,fill=treatment))
+basicC + geom_bar(stat="identity",position="dodge")
+
+#Now for percentage plot
+
+basicCC <- ggplot(dd2,aes(x=infected,y=prcnt*100,fill=treatment)) 
+basicCC + geom_bar(stat="identity", position = "dodge")
+```
+
+
+The graph shows that vaccinated females were less likely to get COVID-19 than those who took the placebo, with under 40% of vaccinated females getting sick compared to over 60% in the placebo group. However, a notable number of vaccinated females still contracted the virus.
+
+
+
+### Numerical
+
+```{r}
+table1 <- xtabs(~infected + treatment, data=female)
+rowPerc(table1)
+colPerc(table1)
+```
+
+
+The numbers show that females who took the placebo were 64.93% more likely to get COVID-19, compared to 35.07% of vaccinated females. Among those who didn’t get sick, the split was nearly even: 49.94% had taken the placebo and 50.06% the vaccine. The infection ratio between placebo and vaccinated females was 3:1, meaning placebo recipients were three times more likely to get sick. While a significant number of vaccinated females still contracted COVID-19, the data supports recommending the vaccine, as it clearly reduces the risk of infection.
+
+
+
+### Inferential
+
+```{r}
+chisq.test(table1)
+chisqtestGC(table1)
+femalefisher <- fisher.test(table1)
+femalefisher
+```
+
+Three tests were conducted to examine whether COVID-19 death is independent of sex. The p-values 1.914e-08, 0, and 1.246e-08 are all extremely small, indicating a strong statistical relationship between sex and COVID-19 mortality. These low values also suggest the vaccine was effective in females. The odds ratio of 1.86 shows that females who took the placebo were nearly twice as likely to get COVID-19 compared to those who were vaccinated.
+
+
+
+
+### Confidence Interval
+
+
+```{r}
+effect <- femalefisher$p.value/(femalefisher$p.value +1)
+effectivenessfemale = femalefisher$estimate/(femalefisher$estimate +1)*100
+print(effectivenessfemale)
+```
+
+```{r}
+low=(femalefisher$conf.int[1]/(femalefisher$conf.int[1] +1))*100
+hi=(femalefisher$conf.int[2]/(femalefisher$conf.int[2] +1))*100
+options(digits=2)
+```
+
+
+The data above shows that the COVID-19 vaccine is effective for females, as the effectiveness exceeds 50%. Based on the confidence interval provided, we can conclude that the vaccine significantly reduces the risk of infection in females.
+
+
+The odds ratio, which reflects the vaccine’s effectiveness, is about 65 for females. The confidence interval for vaccine effectiveness in females ranges from 59.80% to 69.92%, confirming its strong protective effect.
+
 
 ## LGBTQ
+
+
 
 
 
